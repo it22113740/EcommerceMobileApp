@@ -9,7 +9,6 @@ import {
   LogOut,
   Mail,
   MapPin,
-  Phone,
   Settings,
   ShoppingBag,
   Store,
@@ -65,9 +64,7 @@ export default function ProfileScreen() {
     );
   };
 
-  const handleVerifyPhone = () => {
-    router.push('/auth/otp?phone=+1234567890');
-  };
+
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
@@ -91,17 +88,10 @@ export default function ProfileScreen() {
           />
           
           <MenuItem
-            icon={<Phone size={20} color={Colors.primary} />}
-            title="Phone Number"
-            subtitle={user?.phoneNumber || 'Not verified'}
-            onPress={handleVerifyPhone}
-          />
-          
-          <MenuItem
             icon={<MapPin size={20} color={Colors.primary} />}
             title="Address"
-            subtitle="Add your delivery address"
-            onPress={() => {}}
+            subtitle="Manage your delivery addresses"
+            onPress={() => router.push('/address')}
           />
         </View>
 
@@ -112,7 +102,7 @@ export default function ProfileScreen() {
             icon={<ShoppingBag size={20} color={Colors.primary} />}
             title="Order History"
             subtitle="View your past orders"
-            onPress={() => {}}
+            onPress={() => router.push('/order-history')}
           />
           
           <MenuItem
