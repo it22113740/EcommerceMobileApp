@@ -76,7 +76,7 @@ export default function ProfileScreen() {
           <View style={styles.avatarContainer}>
             <User size={40} color={Colors.primary} />
           </View>
-          <Text style={styles.userName}>{user?.name || 'User'}</Text>
+          <Text style={styles.userName}>{user ? `${user.firstName} ${user.lastName}` : 'User'}</Text>
           <Text style={styles.userEmail}>{user?.email}</Text>
         </View>
 
@@ -93,7 +93,7 @@ export default function ProfileScreen() {
           <MenuItem
             icon={<Phone size={20} color={Colors.primary} />}
             title="Phone Number"
-            subtitle={user?.phone || 'Not verified'}
+            subtitle={user?.phoneNumber || 'Not verified'}
             onPress={handleVerifyPhone}
           />
           

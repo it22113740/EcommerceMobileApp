@@ -46,7 +46,7 @@ export default function HomeScreen() {
           </View>
           <View>
             <Text style={styles.welcomeText}>Welcome back,</Text>
-            <Text style={styles.userName}>{user?.name || 'User'}</Text>
+            <Text style={styles.userName}>{user ? `${user.firstName} ${user.lastName}` : 'User'}</Text>
           </View>
         </View>
       </View>
