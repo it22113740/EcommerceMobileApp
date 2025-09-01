@@ -2,18 +2,18 @@ import { Colors } from '@/constants/colors';
 import { useAuth } from '@/hooks/auth-store';
 import { router } from 'expo-router';
 import {
-    ChevronRight,
-    Heart,
-    HelpCircle,
-    Leaf,
-    LogOut,
-    Mail,
-    MapPin,
-    Phone,
-    Settings,
-    ShoppingBag,
-    Store,
-    User
+  ChevronRight,
+  Heart,
+  HelpCircle,
+  Leaf,
+  LogOut,
+  Mail,
+  MapPin,
+  Phone,
+  Settings,
+  ShoppingBag,
+  Store,
+  User
 } from 'lucide-react-native';
 import React from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -119,7 +119,7 @@ export default function ProfileScreen() {
             icon={<Heart size={20} color={Colors.primary} />}
             title="Favorites"
             subtitle="Your saved products"
-            onPress={() => {}}
+            onPress={() => router.push('/favorites')}
           />
           
           <MenuItem

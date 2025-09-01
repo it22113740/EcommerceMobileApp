@@ -1,5 +1,6 @@
 import { AuthProvider, useAuth } from "@/hooks/auth-store";
 import { CartProvider } from "@/hooks/cart-store";
+import { FavoritesProvider } from "@/hooks/favorites-store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -45,9 +46,11 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <CartProvider>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <RootLayoutNav />
-          </GestureHandlerRootView>
+          <FavoritesProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <RootLayoutNav />
+            </GestureHandlerRootView>
+          </FavoritesProvider>
         </CartProvider>
       </AuthProvider>
     </QueryClientProvider>
