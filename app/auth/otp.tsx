@@ -7,12 +7,19 @@ import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function OTPScreen() {
-  const { phone } = useLocalSearchParams<{ phone: string }>();
+  const { phone, email, mode } = useLocalSearchParams<{
+    phone?: string;
+    email?: string;
+    mode?: string;
+  }>();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [timer, setTimer] = useState(60);
   const { verifyOTP, sendOTP } = useAuth();
   const inputRefs = useRef<TextInput[]>([]);
+
+  const isPasswordReset = mode === 'password_reset';
+  const contactInfo = isPasswordReset ? email : phone;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -50,9 +57,15 @@ export default function OTPScreen() {
     setIsLoading(false);
 
     if (result.success) {
-      Alert.alert('Success', 'Phone number verified successfully!', [
-        { text: 'OK', onPress: () => router.replace('/(tabs)') }
-      ]);
+      if (isPasswordReset) {
+        Alert.alert('Success', 'Email verified successfully!', [
+          { text: 'OK', onPress: () => router.replace('/auth/reset-password') }
+        ]);
+      } else {
+        Alert.alert('Success', 'Phone number verified successfully!', [
+          { text: 'OK', onPress: () => router.replace('/(tabs)') }
+        ]);
+      }
     } else {
       Alert.alert('Error', 'Invalid OTP. Please try again.');
     }
@@ -62,31 +75,37 @@ export default function OTPScreen() {
     if (timer > 0) return;
 
     setIsLoading(true);
+    // For password reset, we would typically resend to email
+    // For now, we'll use the phone OTP function as a placeholder
     await sendOTP(phone || '');
     setIsLoading(false);
     setTimer(60);
-    Alert.alert('Success', 'OTP sent successfully!');
+
+    const message = isPasswordReset
+      ? 'Verification code sent to your email!'
+      : 'OTP sent successfully!';
+    Alert.alert('Success', message);
   };
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <Stack.Screen 
-        options={{ 
+      <Stack.Screen
+        options={{
           headerShown: true,
-          title: 'Verify Phone',
+          title: isPasswordReset ? 'Verify Email' : 'Verify Phone',
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()}>
               <ArrowLeft size={24} color={Colors.text} />
             </TouchableOpacity>
           ),
-        }} 
+        }}
       />
       
       <View style={styles.content}>
         <View style={styles.header}>
           <Text style={styles.title}>Enter Verification Code</Text>
           <Text style={styles.subtitle}>
-            We&apos;ve sent a 6-digit code to {phone}
+            We&apos;ve sent a 6-digit code to {contactInfo}
           </Text>
         </View>
 

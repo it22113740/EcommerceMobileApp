@@ -1,22 +1,22 @@
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/hooks/auth-store';
 import {
-    AlertCircle,
-    ArrowLeft,
-    Eye,
-    EyeOff,
-    Fingerprint,
-    Lock,
-    Shield
+  AlertCircle,
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  Fingerprint,
+  Lock,
+  Shield
 } from 'lucide-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -46,10 +46,6 @@ export default function CheckoutVerificationScreen({
   const [error, setError] = useState<string | null>(null);
   const [isFirstAttempt, setIsFirstAttempt] = useState(true);
 
-  useEffect(() => {
-    checkBiometricSetup();
-  }, []);
-
   const checkBiometricSetup = useCallback(async () => {
     try {
       const { isAvailable, biometricType: type } = await checkBiometricAvailability();
@@ -63,6 +59,10 @@ export default function CheckoutVerificationScreen({
       setAuthMethod('pin');
     }
   }, [checkBiometricAvailability]);
+
+  useEffect(() => {
+    checkBiometricSetup();
+  }, [checkBiometricSetup]);
 
   const handleBiometricAuth = async () => {
     setIsAuthenticating(true);
