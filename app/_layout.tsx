@@ -1,6 +1,7 @@
 import { AuthProvider, useAuth } from "@/hooks/auth-store";
 import { CartProvider } from "@/hooks/cart-store";
 import { FavoritesProvider } from "@/hooks/favorites-store";
+import { OrderProvider } from "@/hooks/order-store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -34,7 +35,13 @@ function RootLayoutNav() {
           <Stack.Screen name="auth/otp" options={{ headerShown: false }} />
         </>
       ) : (
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="order-history" options={{ headerShown: false }} />
+          <Stack.Screen name="address" options={{ headerShown: false }} />
+          <Stack.Screen name="favorites" options={{ headerShown: false }} />
+          <Stack.Screen name="vendor/application" options={{ headerShown: false }} />
+        </>
       )}
       <Stack.Screen name="modal" options={{ presentation: "modal" }} />
     </Stack>
@@ -47,9 +54,11 @@ export default function RootLayout() {
       <AuthProvider>
         <CartProvider>
           <FavoritesProvider>
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <RootLayoutNav />
-            </GestureHandlerRootView>
+            <OrderProvider>
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <RootLayoutNav />
+              </GestureHandlerRootView>
+            </OrderProvider>
           </FavoritesProvider>
         </CartProvider>
       </AuthProvider>

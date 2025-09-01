@@ -1,6 +1,7 @@
 import CheckoutVerificationScreen from '@/app/auth/checkout-verification';
 import { Colors } from '@/constants/colors';
 import { useCart } from '@/hooks/cart-store';
+import { useOrder } from '@/hooks/order-store';
 import { CartItem } from '@/types/product';
 import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react-native';
 import React, { useState } from 'react';
@@ -9,6 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CartScreen() {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
+  const { createOrder } = useOrder();
   const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
@@ -32,9 +34,13 @@ export default function CartScreen() {
 
   const handleVerificationSuccess = () => {
     setShowVerificationModal(false);
+
+    // Create order from current cart items
+    const order = createOrder(items, totalPrice);
+
     Alert.alert(
       'Order Confirmed!',
-      'Your order has been placed successfully. You will receive a confirmation email shortly.',
+      `Your order #${order.id.split('_')[1]} has been placed successfully. You will receive a confirmation email shortly.`,
       [
         {
           text: 'OK',
