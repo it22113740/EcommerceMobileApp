@@ -1,13 +1,15 @@
+import CheckoutVerificationScreen from '@/app/auth/checkout-verification';
 import { Colors } from '@/constants/colors';
 import { useCart } from '@/hooks/cart-store';
 import { CartItem } from '@/types/product';
 import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react-native';
-import React from 'react';
-import { Alert, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, FlatList, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CartScreen() {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
     updateQuantity(productId, newQuantity);
@@ -25,20 +27,25 @@ export default function CartScreen() {
   };
 
   const handleCheckout = () => {
+    setShowVerificationModal(true);
+  };
+
+  const handleVerificationSuccess = () => {
+    setShowVerificationModal(false);
     Alert.alert(
-      'Checkout',
-      `Total: $${totalPrice.toFixed(2)}\n\nProceed to checkout?`,
+      'Order Confirmed!',
+      'Your order has been placed successfully. You will receive a confirmation email shortly.',
       [
-        { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Checkout', 
-          onPress: () => {
-            Alert.alert('Success', 'Order placed successfully!');
-            clearCart();
-          }
-        },
+        {
+          text: 'OK',
+          onPress: () => clearCart()
+        }
       ]
     );
+  };
+
+  const handleVerificationCancel = () => {
+    setShowVerificationModal(false);
   };
 
   const renderCartItem = ({ item }: { item: CartItem }) => (
@@ -121,6 +128,19 @@ export default function CartScreen() {
           <Text style={styles.checkoutButtonText}>Checkout</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        visible={showVerificationModal}
+        animationType="slide"
+        presentationStyle="pageSheet"
+        onRequestClose={handleVerificationCancel}
+      >
+        <CheckoutVerificationScreen
+          totalAmount={totalPrice.toFixed(2)}
+          onVerificationSuccess={handleVerificationSuccess}
+          onVerificationCancel={handleVerificationCancel}
+        />
+      </Modal>
     </SafeAreaView>
   );
 }

@@ -1,13 +1,15 @@
 import { Colors } from '@/constants/colors';
 import { useAuth } from '@/hooks/auth-store';
 import { router } from 'expo-router';
-import { Leaf, Lock, Mail, User } from 'lucide-react-native';
+import { Leaf, Lock, Mail, Phone, User } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SignupScreen() {
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -15,8 +17,8 @@ export default function SignupScreen() {
   const { signup } = useAuth();
 
   const handleSignup = async () => {
-    if (!name || !email || !password || !confirmPassword) {
-      Alert.alert('Error', 'Please fill in all fields');
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      Alert.alert('Error', 'Please fill in all required fields');
       return;
     }
 
@@ -31,11 +33,11 @@ export default function SignupScreen() {
     }
 
     setIsLoading(true);
-    const result = await signup(email, password, name);
+    const result = await signup(email, password, firstName, lastName, phoneNumber || undefined);
     setIsLoading(false);
 
     if (result.success) {
-      router.replace('/(tabs)');
+      router.replace('/auth/biometric-setup');
     } else {
       Alert.alert('Error', result.error || 'Signup failed');
     }
@@ -43,28 +45,58 @@ export default function SignupScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <KeyboardAvoidingView 
-        style={styles.content} 
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Leaf size={40} color={Colors.primary} />
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.header}>
+            <View style={styles.logoContainer}>
+              <Leaf size={40} color={Colors.primary} />
+            </View>
+            <Text style={styles.title}>Join EcoMarket</Text>
+            <Text style={styles.subtitle}>Create your account to start shopping sustainably</Text>
           </View>
-          <Text style={styles.title}>Join EcoMarket</Text>
-          <Text style={styles.subtitle}>Create your account to start shopping sustainably</Text>
-        </View>
 
-        <View style={styles.form}>
+          <View style={styles.form}>
           <View style={styles.inputContainer}>
             <User size={20} color={Colors.textLight} />
             <TextInput
               style={styles.input}
-              placeholder="Full Name"
-              value={name}
-              onChangeText={setName}
+              placeholder="First Name"
+              value={firstName}
+              onChangeText={setFirstName}
               autoCapitalize="words"
-              autoComplete="name"
+              autoComplete="given-name"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <User size={20} color={Colors.textLight} />
+            <TextInput
+              style={styles.input}
+              placeholder="Last Name"
+              value={lastName}
+              onChangeText={setLastName}
+              autoCapitalize="words"
+              autoComplete="family-name"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Phone size={20} color={Colors.textLight} />
+            <TextInput
+              style={styles.input}
+              placeholder="Phone Number (Optional)"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              keyboardType="phone-pad"
+              autoComplete="tel"
             />
           </View>
 
@@ -121,7 +153,8 @@ export default function SignupScreen() {
               <Text style={styles.loginLink}>Sign In</Text>
             </TouchableOpacity>
           </View>
-        </View>
+          </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -132,8 +165,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background,
   },
-  content: {
+  keyboardAvoidingView: {
     flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
     padding: 24,
     justifyContent: 'center',
   },
