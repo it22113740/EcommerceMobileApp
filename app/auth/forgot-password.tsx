@@ -20,11 +20,14 @@ export default function ForgotPasswordScreen() {
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsLoading(false);
 
-    Alert.alert(
-      'Reset Link Sent',
-      'We\'ve sent a password reset link to your email address.',
-      [{ text: 'OK', onPress: () => router.back() }]
-    );
+    // Navigate to OTP screen with email for verification
+    router.push({
+      pathname: '/auth/otp',
+      params: {
+        email: email,
+        mode: 'password_reset'
+      }
+    });
   };
 
   return (
