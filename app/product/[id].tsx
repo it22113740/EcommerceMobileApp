@@ -2,31 +2,32 @@ import ProductCard from '@/components/ProductCard';
 import { Colors } from '@/constants/colors';
 import { mockProducts, mockReviews } from '@/data/products';
 import { useCart } from '@/hooks/cart-store';
+import { useFavorites } from '@/hooks/favorites-store';
 import { Product, Review } from '@/types/product';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import {
-    ArrowLeft,
-    Award,
-    CheckCircle,
-    Heart,
-    Leaf,
-    MapPin,
-    Minus,
-    Plus,
-    Share2,
-    ShoppingCart,
-    Star,
+  ArrowLeft,
+  Award,
+  CheckCircle,
+  Heart,
+  Leaf,
+  MapPin,
+  Minus,
+  Plus,
+  Share2,
+  ShoppingCart,
+  Star,
 } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
-    Dimensions,
-    FlatList,
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -38,6 +39,7 @@ export default function ProductDetailScreen() {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<'details' | 'reviews'>('details');
   const { addToCart } = useCart();
+  const { toggleFavorite, isFavorite } = useFavorites();
 
   const product = mockProducts.find((p) => p.id === id);
   const reviews = mockReviews[id || ''] || [];
@@ -128,8 +130,15 @@ export default function ProductDetailScreen() {
           <ArrowLeft size={24} color={Colors.text} />
         </TouchableOpacity>
         <View style={styles.headerActions}>
-          <TouchableOpacity style={styles.headerButton}>
-            <Heart size={24} color={Colors.text} />
+          <TouchableOpacity
+            style={styles.headerButton}
+            onPress={() => toggleFavorite(id || '')}
+          >
+            <Heart
+              size={24}
+              color={isFavorite(id || '') ? Colors.error : Colors.text}
+              fill={isFavorite(id || '') ? Colors.error : 'transparent'}
+            />
           </TouchableOpacity>
           <TouchableOpacity style={styles.headerButton}>
             <Share2 size={24} color={Colors.text} />
