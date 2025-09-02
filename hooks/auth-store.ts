@@ -46,6 +46,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         firstName: email.split('@')[0],
         lastName: '',
         phoneNumber: '+1234567890',
+        role: email === 'vendor@gmail.com' ? 'vendor' : 'customer',
       };
 
       await AsyncStorage.setItem('user', JSON.stringify(user));
@@ -72,6 +73,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         firstName,
         lastName,
         phoneNumber,
+        role: email === 'vendor@gmail.com' ? 'vendor' : 'customer',
       };
 
       await AsyncStorage.setItem('user', JSON.stringify(user));

@@ -5,6 +5,7 @@ export interface User {
     lastName: string;
     phoneNumber?: string;
     avatar?: string;
+    role: 'customer' | 'vendor';
   }
   
   export interface AuthState {

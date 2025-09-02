@@ -9,6 +9,8 @@ import {
   LogOut,
   Mail,
   MapPin,
+  Package,
+  Plus,
   Settings,
   ShoppingBag,
   Store,
@@ -122,13 +124,31 @@ export default function ProfileScreen() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Business</Text>
-          
-          <MenuItem
-            icon={<Store size={20} color={Colors.success} />}
-            title="Apply For Vendor"
-            subtitle="Sell your eco-friendly products"
-            onPress={() => router.push('/vendor/application')}
-          />
+
+          {user?.role === 'vendor' ? (
+            <>
+              <MenuItem
+                icon={<Plus size={20} color={Colors.success} />}
+                title="Add Product"
+                subtitle="Add new eco-friendly products"
+                onPress={() => router.push('/vendor/add-product' as any)}
+              />
+
+              <MenuItem
+                icon={<Package size={20} color={Colors.primary} />}
+                title="Added Products"
+                subtitle="View your products and approval status"
+                onPress={() => router.push('/vendor/added-products' as any)}
+              />
+            </>
+          ) : (
+            <MenuItem
+              icon={<Store size={20} color={Colors.success} />}
+              title="Apply For Vendor"
+              subtitle="Sell your eco-friendly products"
+              onPress={() => router.push('/vendor/application')}
+            />
+          )}
         </View>
 
         <View style={styles.section}>
