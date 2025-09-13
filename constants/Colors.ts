@@ -11,6 +11,7 @@ export const Colors = {
     warning: '#FF9800',
     border: '#E8F5E8',
     cardBackground: '#FFFFFF',
+    errorLight: '#F8D7DA',
   };
   
   export default {
